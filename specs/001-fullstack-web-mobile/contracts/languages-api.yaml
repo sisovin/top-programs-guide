@@ -1,0 +1,406 @@
+openapi: 3.0.3
+info:
+  title: Top 10 Programming Languages Guide API
+  version: 1.0.0
+  description: RESTful API for programming language information
+  contact:
+    name: API Support
+    email: support@topprogramsguide.com
+
+servers:
+  - url: http://localhost:3333/api
+    description: Development server
+  - url: https://api.topprogramsguide.com/api
+    description: Production server
+
+paths:
+  /languages:
+    get:
+      summary: Get all programming languages
+      description: Retrieve a paginated list of all programming languages
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of items per page
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in name and description
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [name, popularityIndex, releaseYear]
+            default: popularityIndex
+          description: Sort field
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Language"
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      total:
+                        type: integer
+                      totalPages:
+                        type: integer
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      summary: Create a new programming language
+      description: Add a new programming language (Admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLanguageRequest"
+      responses:
+        "201":
+          description: Language created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Language"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /languages/{id}:
+    get:
+      summary: Get a specific programming language
+      description: Retrieve detailed information about a specific language
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Language ID
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Language"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    put:
+      summary: Update a programming language
+      description: Modify an existing programming language (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Language ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateLanguageRequest"
+      responses:
+        "200":
+          description: Language updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Language"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    delete:
+      summary: Delete a programming language
+      description: Remove a programming language (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Language ID
+      responses:
+        "200":
+          description: Language deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Language deleted successfully"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+components:
+  schemas:
+    Language:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Python"
+        description:
+          type: string
+          example: "A high-level programming language known for its simplicity and readability"
+        useCases:
+          type: array
+          items:
+            type: string
+          example: ["Web Development", "Data Science", "Machine Learning"]
+        advantages:
+          type: array
+          items:
+            type: string
+          example: ["Easy to learn", "Large community", "Extensive libraries"]
+        salaryRange:
+          type: object
+          properties:
+            min:
+              type: number
+              example: 60000
+            max:
+              type: number
+              example: 150000
+            currency:
+              type: string
+              example: "USD"
+            experienceLevel:
+              type: string
+              enum: [entry, mid, senior]
+              example: "mid"
+        popularityIndex:
+          type: integer
+          minimum: 1
+          maximum: 100
+          example: 95
+        releaseYear:
+          type: integer
+          example: 1991
+        logoUrl:
+          type: string
+          format: uri
+          example: "/assets/logos/python.svg"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateLanguageRequest:
+      type: object
+      required:
+        - name
+        - description
+        - useCases
+        - advantages
+        - salaryRange
+        - popularityIndex
+        - releaseYear
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          minLength: 10
+        useCases:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        advantages:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        salaryRange:
+          type: object
+          required:
+            - min
+            - max
+          properties:
+            min:
+              type: number
+              minimum: 0
+            max:
+              type: number
+              minimum: 0
+            currency:
+              type: string
+              default: "USD"
+            experienceLevel:
+              type: string
+              enum: [entry, mid, senior]
+        popularityIndex:
+          type: integer
+          minimum: 1
+          maximum: 100
+        releaseYear:
+          type: integer
+          minimum: 1950
+        logoUrl:
+          type: string
+          format: uri
+
+    UpdateLanguageRequest:
+      allOf:
+        - $ref: "#/components/schemas/CreateLanguageRequest"
+      type: object
+      # All fields optional for updates
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "ValidationError"
+        message:
+          type: string
+          example: "Invalid input data"
+        details:
+          type: array
+          items:
+            type: object
+          example: [{ "field": "name", "message": "Name is required" }]
+
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

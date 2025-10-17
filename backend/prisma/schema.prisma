@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ProgrammingLanguage {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique @db.VarChar(100)
+  description     String
+  useCases        Json
+  advantages      Json
+  salaryRange     Json
+  popularityIndex Int              @db.SmallInt
+  releaseYear     Int
+  logoUrl         String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  careerPaths     CareerPath[]
+  comparisons1    ComparisonData[] @relation("Language1Comparisons")
+  comparisons2    ComparisonData[] @relation("Language2Comparisons")
+
+  @@index([popularityIndex])
+  @@index([releaseYear])
+  @@map("programming_languages")
+}
+
+model User {
+  id                 Int      @id @default(autoincrement())
+  email              String   @unique @db.VarChar(255)
+  password           String   @db.VarChar(255)
+  name               String   @db.VarChar(100)
+  role               String   @default("user") @db.VarChar(20)
+  preferences        Json     @default("{}")
+  interactionHistory Json     @default("[]")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model CareerPath {
+  id                 Int                 @id @default(autoincrement())
+  languageId         Int
+  title              String              @db.VarChar(100)
+  description        String
+  salaryRange        Json
+  experienceRequired String              @db.VarChar(50)
+  createdAt          DateTime            @default(now())
+  language           ProgrammingLanguage @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@index([languageId])
+  @@index([title])
+  @@map("career_paths")
+}
+
+model ComparisonData {
+  id          Int                 @id @default(autoincrement())
+  language1Id Int
+  language2Id Int
+  metric      String              @db.VarChar(50)
+  value1      Float
+  value2      Float
+  description String?
+  createdAt   DateTime            @default(now())
+  language1   ProgrammingLanguage @relation("Language1Comparisons", fields: [language1Id], references: [id])
+  language2   ProgrammingLanguage @relation("Language2Comparisons", fields: [language2Id], references: [id])
+
+  @@index([language1Id, language2Id])
+  @@index([metric])
+  @@map("comparison_data")
+}

@@ -1,0 +1,8 @@
+{
+  "name": "top-programs-guide-landing",
+  "version": "1.0.0",
+  "description": "PHP landing page for Top 10 Programming Languages Guide",
+  "require": {
+    "php": "^8.4"
+  }
+}

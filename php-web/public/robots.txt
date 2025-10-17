@@ -1,0 +1,13 @@
+# robots.txt for Top Programming Languages Guide
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://top-programs-guide.com/sitemap.xml
+
+# Crawl-delay (optional, adjust as needed)
+Crawl-delay: 1
+
+# Disallow admin areas (if any in future)
+# Disallow: /admin/

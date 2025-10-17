@@ -1,50 +1,54 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: N/A → 1.0.0
+- List of modified principles: All principles added (new constitution)
+- Added sections: Technology Stack & Configuration, Development Workflow & Quality Gates
+- Removed sections: None
+- Templates requiring updates: ⚠ pending - plan-template.md, spec-template.md, tasks-template.md, command files
+- Follow-up TODOs: None
+-->
+# Top 10 Programming Languages Guide Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Type Safety and Code Quality
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Full TypeScript strict mode compliance across all components; Type-safe database operations with Prisma; Comprehensive input validation using Zod schemas; Zero-tolerance for any type errors or unsafe operations.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Performance and Scalability
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+All web pages must achieve Google Lighthouse performance score >90; Stateless API design for horizontal scaling; Optimized database queries and caching; Container-ready deployment for easy scaling.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Security and Reliability
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Input validation and SQL injection prevention via Prisma; CORS configuration and rate limiting; JWT authentication for admin endpoints; Comprehensive error handling and logging.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Accessibility and User Experience
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+WCAG 2.1 Level AA compliance across all interfaces; Mobile-first responsive design from 320px to 4K screens; Modern, intuitive UI using Shadcn/UI components; Fast loading and smooth interactions.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. RESTful API Standards
+
+Consistent RESTful API design patterns; Proper HTTP status codes and response formats; Comprehensive endpoint documentation; Backward-compatible API evolution.
+
+### VI. Modern Technology Stack
+
+Next.js 15.5.2 with App Router for optimal performance; React 19.2 for modern UI development; Shadcn/ui with Tailwind CSS v4.1.14 for utility-first styling; PostgreSQL with Prisma ORM for type-safe data operations.
+
+### VII. Cross-Platform Compatibility
+
+Shared business logic via Kotlin Multiplatform Mobile; Consistent user experience across web, Android, and iOS platforms; Platform-specific optimizations while maintaining core functionality.
+
+## Technology Stack & Configuration
+
+Technology stack requirements include Node.js 18+, TypeScript strict mode, Express.js, Prisma ORM, PostgreSQL, Next.js 15.5.2, React 19.2, Tailwind CSS v4.1.14, Shadcn/UI, PHP 8.4.5, Kotlin Multiplatform Mobile, Android SDK, and Xcode for iOS. All frontend clients (Web, Mobile, PHP) communicate with the central Backend API Server via RESTful API endpoints.All components must use the specified versions for compatibility and security.
+
+## Development Workflow & Quality Gates
+
+Code review requirements mandate TypeScript strict compliance and performance benchmarks. Testing gates require unit tests for controllers (90%+ coverage), integration tests for API endpoints, and validation schema tests (100% coverage). Deployment approval requires successful builds, passing tests, and Lighthouse scores >90.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Constitution supersedes all other practices; Amendments require documentation, team approval, and migration plan. Versioning follows semantic versioning: MAJOR for breaking changes, MINOR for new features, PATCH for fixes. All PRs/reviews must verify compliance with principles; Complexity must be justified against YAGNI principles.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-17

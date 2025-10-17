@@ -1,0 +1,647 @@
+openapi: 3.0.3
+info:
+  title: Top 10 Programming Languages API
+  description: |
+    RESTful API for the Top 10 Programming Languages Guide application.
+
+    ## Authentication
+    Most endpoints require JWT authentication. Include the token in the Authorization header:
+    ```
+    Authorization: Bearer <your-jwt-token>
+    ```
+
+    ## Rate Limiting
+    - General API: 100 requests / 15 minutes
+    - Authentication: 5 requests / 15 minutes
+    - Admin operations: 30 requests / 15 minutes
+    - Read operations: 200 requests / 15 minutes
+
+    Rate limit headers are included in responses:
+    - `RateLimit-Limit`: Maximum requests allowed
+    - `RateLimit-Remaining`: Requests remaining
+    - `RateLimit-Reset`: Unix timestamp when limit resets
+
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3001/api
+    description: Development server
+  - url: https://api.production.com/api
+    description: Production server
+
+tags:
+  - name: Languages
+    description: Programming language endpoints
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Career Paths
+    description: Career path information
+  - name: Comparison
+    description: Language comparison tools
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Language:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "JavaScript"
+        description:
+          type: string
+          example: "High-level, interpreted programming language"
+        useCases:
+          type: array
+          items:
+            type: string
+          example: ["Web Development", "Server-side", "Mobile Apps"]
+        advantages:
+          type: array
+          items:
+            type: string
+          example: ["Large ecosystem", "Easy to learn", "Versatile"]
+        salaryRange:
+          type: object
+          properties:
+            min:
+              type: integer
+              example: 60000
+            max:
+              type: integer
+              example: 150000
+            currency:
+              type: string
+              example: "USD"
+            experienceLevel:
+              type: string
+              example: "Mid-level"
+        popularityIndex:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 95
+        releaseYear:
+          type: integer
+          example: 1995
+        logoUrl:
+          type: string
+          format: uri
+          example: "https://example.com/logos/javascript.png"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        name:
+          type: string
+          example: "John Doe"
+        role:
+          type: string
+          enum: [user, admin]
+          example: "user"
+        createdAt:
+          type: string
+          format: date-time
+
+    CareerPath:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          example: "Full Stack Web Developer"
+        description:
+          type: string
+        requiredLanguages:
+          type: array
+          items:
+            type: string
+          example: ["JavaScript", "Python", "TypeScript"]
+        averageSalary:
+          type: integer
+          example: 95000
+        jobGrowth:
+          type: number
+          format: float
+          example: 13.5
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+
+    PaginatedResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            type: object
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            total:
+              type: integer
+              example: 100
+            totalPages:
+              type: integer
+              example: 10
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "ValidationError"
+        message:
+          type: string
+          example: "Invalid input data"
+        details:
+          type: array
+          items:
+            type: object
+
+paths:
+  /languages:
+    get:
+      tags:
+        - Languages
+      summary: List all programming languages
+      description: Get a paginated list of programming languages with optional filtering and sorting
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: search
+          in: query
+          description: Search query for language name or description
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+            enum: [name, popularityIndex, releaseYear, createdAt]
+            default: popularityIndex
+        - name: order
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PaginatedResponse"
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Language"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    post:
+      tags:
+        - Languages
+      summary: Create a new programming language
+      description: Admin only - Create a new programming language entry
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+                - useCases
+                - advantages
+                - salaryRange
+                - popularityIndex
+                - releaseYear
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                useCases:
+                  type: array
+                  items:
+                    type: string
+                advantages:
+                  type: array
+                  items:
+                    type: string
+                salaryRange:
+                  type: object
+                  properties:
+                    min:
+                      type: integer
+                    max:
+                      type: integer
+                    currency:
+                      type: string
+                    experienceLevel:
+                      type: string
+                popularityIndex:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                releaseYear:
+                  type: integer
+                logoUrl:
+                  type: string
+                  format: uri
+      responses:
+        "201":
+          description: Language created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Language"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Admin only
+        "409":
+          description: Conflict - Language already exists
+
+  /languages/{id}:
+    get:
+      tags:
+        - Languages
+      summary: Get language by ID
+      description: Retrieve detailed information about a specific programming language
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Language ID
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/Language"
+        "404":
+          description: Language not found
+
+    put:
+      tags:
+        - Languages
+      summary: Update language
+      description: Admin only - Update an existing programming language
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                useCases:
+                  type: array
+                  items:
+                    type: string
+                advantages:
+                  type: array
+                  items:
+                    type: string
+                salaryRange:
+                  type: object
+                popularityIndex:
+                  type: integer
+                releaseYear:
+                  type: integer
+                logoUrl:
+                  type: string
+      responses:
+        "200":
+          description: Language updated successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Admin only
+        "404":
+          description: Language not found
+
+    delete:
+      tags:
+        - Languages
+      summary: Delete language
+      description: Admin only - Delete a programming language
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Language deleted successfully
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Admin only
+        "404":
+          description: Language not found
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register new user
+      description: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: "#/components/schemas/User"
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+        "400":
+          description: Validation error
+        "409":
+          description: User already exists
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user and receive JWT tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: "#/components/schemas/User"
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+        "401":
+          description: Invalid credentials
+        "429":
+          description: Too many login attempts
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Get a new access token using refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+        "401":
+          description: Invalid refresh token
+
+  /auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user
+      description: Retrieve authenticated user information
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User information retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+
+  /career-paths:
+    get:
+      tags:
+        - Career Paths
+      summary: List career paths
+      description: Get available career paths for programming languages
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CareerPath"
+
+  /compare:
+    get:
+      tags:
+        - Comparison
+      summary: Compare languages
+      description: Compare multiple programming languages side-by-side
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          description: Comma-separated language IDs to compare
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        "200":
+          description: Comparison data retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Language"
+        "400":
+          description: Invalid language IDs
