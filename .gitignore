@@ -1,0 +1,5 @@
+
+# Gradle build files
+mobile-app/.gradle/
+mobile-app/build/
+mobile-app/*/build/
