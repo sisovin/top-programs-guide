@@ -22,7 +22,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.7.0",
+    "@prisma/client": "^6.17.1",
     "@sentry/node": "^10.20.0",
     "@sentry/tracing": "^7.120.4",
     "cors": "^2.8.5",

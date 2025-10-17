@@ -33,7 +33,7 @@ echo "🔍 Running diagnostics..."
 
 # Check backend
 echo "1️⃣ Backend API:"
-curl -s -o /dev/null -w "Status: %{http_code}\n" http://localhost:3001/api/health
+curl -s -o /dev/null -w "Status: %{http_code}\n" http://localhost:3333/api/health
 
 # Check database connection
 echo "2️⃣ Database:"

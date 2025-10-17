@@ -79,7 +79,7 @@ This project uses **Playwright** for end-to-end (E2E) testing across multiple br
 
 - Node.js 18+ installed
 - Frontend dependencies installed (`npm install`)
-- Backend API running on `http://localhost:3001`
+- Backend API running on `http://localhost:3333`
 
 ### Initial Setup
 

@@ -102,13 +102,13 @@
 
 | Variable | Quickstart Value | Actual | Status |
 |----------|-----------------|--------|--------|
-| `NEXT_PUBLIC_API_URL` | `http://localhost:3001/api` | `http://localhost:3001` | ⚠️ **MISMATCH** |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:3333/api` | `http://localhost:3333` | ⚠️ **MISMATCH** |
 
 **Corrections Applied**:
 
 - Removed `/api` suffix from `NEXT_PUBLIC_API_URL`
 - Backend already includes `/api` in routes
-- Correct value: `http://localhost:3001` (not `http://localhost:3001/api`)
+- Correct value: `http://localhost:3333` (not `http://localhost:3333/api`)
 
 #### Package Scripts Validation
 
