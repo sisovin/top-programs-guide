@@ -2,7 +2,7 @@
   "name": "top-programs-guide-backend",
   "version": "1.0.0",
   "description": "Backend API for Top 10 Programming Languages Guide",
-  "main": "dist/app.js",
+  "main": "dist/src/app.js",
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "build": "tsc",

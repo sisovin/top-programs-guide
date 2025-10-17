@@ -2,6 +2,292 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const careerPathsData = [
+  // Python Career Paths
+  {
+    languageId: 1, // Python
+    title: 'Data Scientist',
+    description: 'Analyze complex datasets to extract insights and build predictive models using Python\'s rich data science ecosystem.',
+    salaryRange: {
+      min: 95000,
+      max: 160000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+  {
+    languageId: 1, // Python
+    title: 'Machine Learning Engineer',
+    description: 'Design and implement ML algorithms and systems using TensorFlow, PyTorch, and scikit-learn.',
+    salaryRange: {
+      min: 110000,
+      max: 180000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '4-7 years'
+  },
+  {
+    languageId: 1, // Python
+    title: 'Backend Developer',
+    description: 'Build scalable web applications and APIs using Django, Flask, or FastAPI frameworks.',
+    salaryRange: {
+      min: 85000,
+      max: 140000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '2-4 years'
+  },
+
+  // JavaScript Career Paths
+  {
+    languageId: 2, // JavaScript
+    title: 'Frontend Developer',
+    description: 'Create interactive user interfaces using React, Vue, or Angular frameworks with modern JavaScript.',
+    salaryRange: {
+      min: 75000,
+      max: 130000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '2-4 years'
+  },
+  {
+    languageId: 2, // JavaScript
+    title: 'Full-Stack Developer',
+    description: 'Develop complete web applications using MERN/MEAN stack or similar full-stack technologies.',
+    salaryRange: {
+      min: 90000,
+      max: 150000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+  {
+    languageId: 2, // JavaScript
+    title: 'Node.js Backend Developer',
+    description: 'Build scalable server-side applications and APIs using Node.js, Express, and related technologies.',
+    salaryRange: {
+      min: 85000,
+      max: 145000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+
+  // Java Career Paths
+  {
+    languageId: 3, // Java
+    title: 'Enterprise Java Developer',
+    description: 'Develop large-scale enterprise applications using Spring Framework, Hibernate, and microservices architecture.',
+    salaryRange: {
+      min: 95000,
+      max: 160000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '4-7 years'
+  },
+  {
+    languageId: 3, // Java
+    title: 'Android Developer',
+    description: 'Create native Android applications using Java and Android SDK with modern development practices.',
+    salaryRange: {
+      min: 85000,
+      max: 145000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '2-4 years'
+  },
+
+  // TypeScript Career Paths
+  {
+    languageId: 4, // TypeScript
+    title: 'Senior Frontend Developer',
+    description: 'Build complex, type-safe frontend applications using TypeScript with React, Angular, or Vue.',
+    salaryRange: {
+      min: 100000,
+      max: 170000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '4-6 years'
+  },
+  {
+    languageId: 4, // TypeScript
+    title: 'Full-Stack TypeScript Developer',
+    description: 'Develop end-to-end applications using TypeScript for both frontend and backend with Node.js.',
+    salaryRange: {
+      min: 105000,
+      max: 175000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '4-7 years'
+  },
+
+  // C++ Career Paths
+  {
+    languageId: 5, // C++
+    title: 'Game Developer',
+    description: 'Create high-performance game engines and applications using C++ with graphics APIs like OpenGL or Vulkan.',
+    salaryRange: {
+      min: 90000,
+      max: 160000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+  {
+    languageId: 5, // C++
+    title: 'Systems Engineer',
+    description: 'Develop low-level system software, operating systems, and high-performance computing applications.',
+    salaryRange: {
+      min: 110000,
+      max: 180000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '5-8 years'
+  },
+
+  // Go Career Paths
+  {
+    languageId: 6, // Go
+    title: 'Cloud Engineer',
+    description: 'Build scalable cloud services and microservices using Go with Docker and Kubernetes.',
+    salaryRange: {
+      min: 105000,
+      max: 175000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '4-6 years'
+  },
+  {
+    languageId: 6, // Go
+    title: 'DevOps Engineer',
+    description: 'Develop infrastructure automation tools and CI/CD pipelines using Go\'s concurrency features.',
+    salaryRange: {
+      min: 100000,
+      max: 165000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+
+  // Rust Career Paths
+  {
+    languageId: 7, // Rust
+    title: 'Systems Programmer',
+    description: 'Develop safe, concurrent systems software and performance-critical applications with memory safety guarantees.',
+    salaryRange: {
+      min: 115000,
+      max: 185000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '4-7 years'
+  },
+  {
+    languageId: 7, // Rust
+    title: 'Blockchain Developer',
+    description: 'Build secure blockchain applications and smart contracts using Rust\'s safety features.',
+    salaryRange: {
+      min: 120000,
+      max: 190000,
+      currency: 'USD',
+      experienceLevel: 'senior'
+    },
+    experienceRequired: '3-6 years'
+  },
+
+  // Swift Career Paths
+  {
+    languageId: 8, // Swift
+    title: 'iOS Developer',
+    description: 'Create native iOS applications using SwiftUI and UIKit with Apple\'s latest development frameworks.',
+    salaryRange: {
+      min: 95000,
+      max: 165000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '2-4 years'
+  },
+  {
+    languageId: 8, // Swift
+    title: 'macOS Developer',
+    description: 'Develop desktop applications for macOS using Swift and Apple\'s AppKit framework.',
+    salaryRange: {
+      min: 100000,
+      max: 170000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+
+  // Kotlin Career Paths
+  {
+    languageId: 9, // Kotlin
+    title: 'Android Developer',
+    description: 'Build modern Android applications using Kotlin with Jetpack Compose and Android Architecture Components.',
+    salaryRange: {
+      min: 90000,
+      max: 155000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '2-4 years'
+  },
+  {
+    languageId: 9, // Kotlin
+    title: 'Backend Developer',
+    description: 'Develop server-side applications using Kotlin with Spring Boot and Ktor frameworks.',
+    salaryRange: {
+      min: 95000,
+      max: 160000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  },
+
+  // C# Career Paths
+  {
+    languageId: 10, // C#
+    title: 'Unity Game Developer',
+    description: 'Create interactive games and applications using Unity engine with C# scripting.',
+    salaryRange: {
+      min: 80000,
+      max: 145000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '2-4 years'
+  },
+  {
+    languageId: 10, // C#
+    title: '.NET Developer',
+    description: 'Build enterprise applications using ASP.NET Core, Entity Framework, and the .NET ecosystem.',
+    salaryRange: {
+      min: 85000,
+      max: 150000,
+      currency: 'USD',
+      experienceLevel: 'mid'
+    },
+    experienceRequired: '3-5 years'
+  }
+];
+
 const languageData = [
   {
     name: 'Python',
@@ -165,6 +451,15 @@ async function main() {
       create: language
     });
     console.log(`Seeded: ${language.name}`);
+  }
+
+  // Seed career paths
+  console.log('Seeding career paths...');
+  for (const careerPath of careerPathsData) {
+    await prisma.careerPath.create({
+      data: careerPath
+    });
+    console.log(`Seeded career path: ${careerPath.title}`);
   }
 
   console.log('Seed completed successfully');

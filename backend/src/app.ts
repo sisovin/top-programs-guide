@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import languageRoutes from './routes/languages';
 import authRoutes from './routes/auth';
+import careerPathRoutes from './routes/career-paths';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger, performanceMonitor, errorLogger } from './middleware/logging';
 import { apiLimiter, authLimiter, readLimiter } from './middleware/rateLimiter';
@@ -73,6 +74,7 @@ app.get('/health', (_req: Request, res: Response) => {
 // Routes with rate limiting
 app.use('/api/languages', readLimiter, languageRoutes); // Read-heavy endpoints
 app.use('/api/auth', authLimiter, authRoutes); // Strict rate limiting for auth
+app.use('/api/career-paths', readLimiter, careerPathRoutes); // Read-heavy endpoints
 
 // Apply general API rate limiter to all /api routes
 app.use('/api', apiLimiter);

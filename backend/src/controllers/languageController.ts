@@ -51,6 +51,16 @@ export const languageController = {
     try {
       const id = parseInt(req.params.id);
 
+      // Validate that id is a valid number
+      if (isNaN(id) || id <= 0) {
+        res.status(400).json({
+          success: false,
+          error: 'ValidationError',
+          message: 'Invalid language ID. Must be a positive integer.'
+        });
+        return;
+      }
+
       const language = await prisma.programmingLanguage.findUnique({
         where: { id },
         include: {
